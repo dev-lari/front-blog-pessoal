@@ -1,4 +1,38 @@
+import { useState, type ChangeEvent } from "react"
+import type { Usuario } from "../../models/Usuario"
+import { cadastrarUsuario } from "../../services/Service"
+
 function Cadastro() {
+//Aqui vem toda a lógica de funcionamento do cadastro, tem que ser antes do retorno:
+
+const [usuario, setUsuario] = useState<Usuario>({
+  id: 0,
+  nome: '',
+  usuario: '',
+  senha: '',
+  foto: ''
+})
+
+//essa função vai receber como parâmetro um evento (e), vai ser do tipo changeEvent (evento de mudança), 
+// o que vai mudar é o elemento de input no html
+function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+  setUsuario({
+    ...usuario, 
+    [e.target.name]: e.target.value
+  })
+}
+
+//enviar os dados pegos do formulário e mandar para o backend
+async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
+  e.preventDefault()
+  try {
+    await cadastrarUsuario('/usuarios/cadastrar', usuario, setUsuario)
+
+  } catch (error) { 
+
+  }
+}
+
 
   return (
     <>
@@ -18,7 +52,8 @@ function Cadastro() {
               name="nome"
               placeholder="Nome"
               className="border-2 border-slate-700 rounded p-2"
-             
+              value={usuario.nome}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
           <div className="flex flex-col w-full">
