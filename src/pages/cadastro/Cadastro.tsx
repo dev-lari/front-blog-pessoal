@@ -1,9 +1,18 @@
-import { useState, type ChangeEvent } from "react"
+import { useEffect, useState, type ChangeEvent } from "react"
 import type { Usuario } from "../../models/Usuario"
 import { cadastrarUsuario } from "../../services/Service"
+import { useNavigate } from "react-router-dom"
+import { ClipLoader } from "react-spinners";
 
 function Cadastro() {
 //Aqui vem toda a lógica de funcionamento do cadastro, tem que ser antes do retorno:
+
+const navigate = useNavigate();
+
+const [isLoading, setIsLoading] = useState<boolean>(false)
+
+const [confirmarSenha, setConfirmaSenha] = useState<string>("")
+
 
 const [usuario, setUsuario] = useState<Usuario>({
   id: 0,
@@ -12,6 +21,16 @@ const [usuario, setUsuario] = useState<Usuario>({
   senha: '',
   foto: ''
 })
+
+useEffect(() => {
+  if (usuario.id !==0){
+    retornar()
+  }
+}, [usuario])
+
+function retornar(){
+  navigate('/login')
+}
 
 //essa função vai receber como parâmetro um evento (e), vai ser do tipo changeEvent (evento de mudança), 
 // o que vai mudar é o elemento de input no html
@@ -22,16 +41,33 @@ function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
   })
 }
 
+function handleConfirmarSenha(e: ChangeEvent<HTMLInputElement>){
+  setConfirmaSenha(e.target.value)
+}
+
+
 //enviar os dados pegos do formulário e mandar para o backend
 async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
   e.preventDefault()
-  try {
-    await cadastrarUsuario('/usuarios/cadastrar', usuario, setUsuario)
 
-  } catch (error) { 
+  if (confirmarSenha === usuario.senha && usuario.senha.length >= 8){
+    
+    setIsLoading(true)
+      
+      try {
+        await cadastrarUsuario('/usuarios/cadastrar', usuario, setUsuario)
+        alert ('Usuário cadastrado com sucesso!')
+      } catch (error) { 
+        alert('Erro ao cadastrar o usuário!')
+      }
+    } else {
+      alert('Dados do usuário incosistentes! Verifique as informações do cadastro.')
+      setUsuario({...usuario, senha: ''})
+      setConfirmaSenha('')
+    }
 
+    setIsLoading(false)
   }
-}
 
 
   return (
@@ -42,8 +78,12 @@ async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
           className="bg-[url('https://i.imgur.com/ZZFAmzo.jpg')] lg:block hidden bg-no-repeat 
                     w-full min-h-screen bg-cover bg-center"
         ></div>
-        <form className='flex justify-center items-center flex-col w-2/3 gap-3' >
+        <form className='flex justify-center items-center flex-col w-2/3 gap-3' 
+              onSubmit = {cadastrarNovoUsuario}>
+              
+
           <h2 className='text-slate-900 text-5xl'>Cadastrar</h2>
+          
           <div className="flex flex-col w-full">
             <label htmlFor="nome">Nome</label>
             <input
@@ -56,6 +96,7 @@ async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
               onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
+          
           <div className="flex flex-col w-full">
             <label htmlFor="usuario">Usuario</label>
             <input
@@ -64,8 +105,11 @@ async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
               name="usuario"
               placeholder="Usuario"
               className="border-2 border-slate-700 rounded p-2"
+              value = {usuario.usuario}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
+          
           <div className="flex flex-col w-full">
             <label htmlFor="foto">Foto</label>
             <input
@@ -74,8 +118,11 @@ async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
               name="foto"
               placeholder="Foto"
               className="border-2 border-slate-700 rounded p-2"
+              value = {usuario.foto}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
+          
           <div className="flex flex-col w-full">
             <label htmlFor="senha">Senha</label>
             <input
@@ -84,8 +131,11 @@ async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
               name="senha"
               placeholder="Senha"
               className="border-2 border-slate-700 rounded p-2"
+              value = {usuario.senha}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
           </div>
+          
           <div className="flex flex-col w-full">
             <label htmlFor="confirmarSenha">Confirmar Senha</label>
             <input
@@ -94,22 +144,33 @@ async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
               name="confirmarSenha"
               placeholder="Confirmar Senha"
               className="border-2 border-slate-700 rounded p-2"
+              value={confirmarSenha}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleConfirmarSenha(e)}
             />
           </div>
+
           <div className="flex justify-around w-full gap-8">
             <button 
                 type='reset'
                 className='rounded text-white bg-red-400 hover:bg-red-700 w-1/2 py-2'
+                onClick={retornar}
              >
                 Cancelar
             </button>
+
             <button 
                 type='submit'
                 className='rounded text-white bg-indigo-400 
                            hover:bg-indigo-900 w-1/2 py-2
                            flex justify-center' 
                 >
-              Cadastrar
+                { isLoading?
+                <ClipLoader
+                  color="#ffffff"
+                  size={24}
+                /> : 
+                <span> Cadastrar </span>
+              }
             </button>
           </div>
         </form>

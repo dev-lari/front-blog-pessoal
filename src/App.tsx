@@ -5,6 +5,7 @@ import Navbar from './components/navbar/Navbar';
 import Home from './pages/home/Home';
 import Cadastro from './pages/cadastro/Cadastro';
 import Login from './pages/login/Login';
+import { AuthProvider } from './contexts/AuthContext';
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     <>
     {/* ativa a navegação do app, precisa colocar ele em volta de tudo que quero que seja navegável, ele vai ser a primeira coisa a carregar.
     Tudo que pode usar a navegação vai aqui dentro */}
+    <AuthProvider>
       <BrowserRouter>
         {/* vem dentro do browserRouter pq são fixos, não mudam  */}
         <Navbar />
@@ -32,6 +34,7 @@ function App() {
         {/* ela ta dentro do browserRouter mas embaixo pq quero o footer embaixo, mas dentro do browser pq ele é fixo  */}
         <Footer />
       </BrowserRouter>
+    </AuthProvider>
     </>
   );
 }
