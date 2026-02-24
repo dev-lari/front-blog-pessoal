@@ -8,11 +8,14 @@ import Login from './pages/login/Login';
 import { AuthProvider } from './contexts/AuthContext';
 import ListaTemas from './components/tema/listatemas/ListaTemas';
 import FormTema from './components/tema/formtema/FormTema';
-import DeletarTema from './components/deletartema/DeletarTema';
+import DeletarTema from './components/tema/deletartema/DeletarTema';
 import ListaPostagens from './components/postagem/listapostagens/ListaPostagens';
 import FormPostagem from './components/postagem/formpostagem/FormPostagem';
 import DeletarPostagem from './components/postagem/deletarpostagem/DeletarPostagem';
 import Perfil from './pages/perfil/Perfil';
+import { ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -21,6 +24,7 @@ function App() {
     {/* ativa a navegação do app, precisa colocar ele em volta de tudo que quero que seja navegável, ele vai ser a primeira coisa a carregar.
     Tudo que pode usar a navegação vai aqui dentro */}
     <AuthProvider>
+      <ToastContainer />
       <BrowserRouter>
         {/* vem dentro do browserRouter pq são fixos, não mudam  */}
         <Navbar />

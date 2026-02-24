@@ -15,6 +15,7 @@ function CardPostagem({postagem}: cardPostagemProps) {
             <img 
                 src={postagem.usuario?.foto || 'https://ik.imagekit.io/dvkwsy8r1/user.png'}
                 className="h-12 rounded-full" 
+                onError = { (e) => e.currentTarget.src = 'https://ik.imagekit.io/dvkwsy8r1/user.png'}
                 alt={postagem.usuario?.nome} />
             <h3 className="text-lg font-bold text-center uppercase">
                 {postagem.usuario?.nome}
@@ -23,8 +24,12 @@ function CardPostagem({postagem}: cardPostagemProps) {
         <div className="p-4">
             <h4 className="text-lg font-semibold uppercase"> {postagem.titulo} </h4>
             <p>{postagem.texto}</p>
-            <p>Tema: {postagem.tema?.descricao} </p>
-            <p>Data: {new Intl.DateTimeFormat("pt-BR",{
+            <p className=''>
+                <span className="font-bold"> Tema: </span> 
+                {postagem.tema?.descricao} </p>
+            <p className="">
+                <span className="font-bold"> Data: </span> 
+                {new Intl.DateTimeFormat("pt-BR",{
                 dateStyle: 'full',
                 timeStyle: 'medium',
             }).format(new Date(postagem.data))} </p>
