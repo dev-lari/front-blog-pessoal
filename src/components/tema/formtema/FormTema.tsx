@@ -91,7 +91,7 @@ function FormTema() {
     }
 
   return (
-    <div className="container flex flex-col items-center justify-center justify-center mx-auto">
+    <div className="container flex flex-col items-center justify-center mx-auto">
         <h1 className="text-4xl text-center my-8">
             {id === undefined ? 'Cadastrar Tema' : 'Editar Tema'}
         </h1>
@@ -122,7 +122,6 @@ function FormTema() {
                     /> : 
                     <span> {id === undefined ? 'Cadastrar' : 'Atualizar'} </span>
                 }   
-
             </button>       
         </form>
     </div>

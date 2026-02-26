@@ -58,6 +58,7 @@ async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
       try {
         await cadastrarUsuario('/usuarios/cadastrar', usuario, setUsuario)
         ToastAlerta("Usuário cadastrado com sucesso!", "sucesso")
+        retornar()
       } catch (error) { 
         ToastAlerta("Erro ao cadastrar usuário!", "erro")
       }
@@ -164,6 +165,7 @@ async function cadastrarNovoUsuario(e: ChangeEvent<HTMLFormElement>) {
                 className='rounded text-white bg-indigo-400 
                            hover:bg-indigo-900 w-1/2 py-2
                            flex justify-center' 
+                onClick={retornar}
                 >
                 { isLoading?
                 <ClipLoader
